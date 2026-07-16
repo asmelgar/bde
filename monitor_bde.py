@@ -18,6 +18,7 @@ import re
 import sys
 import json
 import html
+import time
 from datetime import datetime
 from urllib.parse import urljoin
 import requests
@@ -41,13 +42,24 @@ CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
 
 def send_telegram(text: str) -> None:
     api = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    r = requests.post(api, data={
-        "chat_id": CHAT_ID,
-        "text": text,
-        "parse_mode": "HTML",
-        "disable_web_page_preview": "true",
-    }, timeout=30)
-    r.raise_for_status()
+    last_err = None
+    for intento in range(3):  # 3 intentos con espera creciente
+        try:
+            r = requests.post(api, data={
+                "chat_id": CHAT_ID,
+                "text": text,
+                "parse_mode": "HTML",
+                "disable_web_page_preview": "true",
+            }, timeout=60)
+            r.raise_for_status()
+            return
+        except requests.exceptions.RequestException as e:
+            last_err = e
+            if intento < 2:
+                time.sleep(5 * (intento + 1))  # 5s, luego 10s
+    # Si los 3 intentos fallan, no tumbamos el workflow entero por un
+    # problema de red pasajero de Telegram: solo lo dejamos en el log.
+    print(f"AVISO: no se pudo enviar el Telegram tras 3 intentos: {last_err}")
 
 
 def fetch_page() -> str:
