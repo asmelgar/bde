@@ -2,12 +2,13 @@ name: Monitor convocatoria BdE 2026A11
 
 on:
   schedule:
-    # Cada 30 minutos. Formato cron en UTC.
-    - cron: "*/30 * * * *"
-  workflow_dispatch:  # permite lanzarlo a mano desde la pestaña Actions
+    - cron: "7,37 * * * *"   # respaldo, aunque sea impuntual
+  workflow_dispatch:
+  repository_dispatch:
+    types: [run-monitor]
 
 permissions:
-  contents: write  # necesario para commitear state.json
+  contents: write
 
 concurrency:
   group: bde-monitor
