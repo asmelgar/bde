@@ -75,6 +75,9 @@ def fetch_page() -> requests.Response:
         try:
             resp = requests.get(URL, headers=HEADERS, timeout=30)
             resp.raise_for_status()
+            # El BdE a veces no declara el charset en la cabecera y requests
+            # cae a ISO-8859-1 ("TÃ©cnico"). La página es UTF-8: lo forzamos.
+            resp.encoding = "utf-8"
             return resp
         except requests.exceptions.RequestException as e:
             last_err = e
@@ -101,7 +104,8 @@ def diagnose(resp: requests.Response) -> str:
 
 
 def parse_date(raw_html: str) -> str:
-    m = re.search(r"Fecha de actualizaci[oó]n:\s*(\d{2}/\d{2}/\d{4})",
+    # ".{1,2}" en vez de "[oó]" por si vuelve a llegar mal codificado
+    m = re.search(r"Fecha de actualizaci.{1,2}n:\s*(\d{2}/\d{2}/\d{4})",
                   visible_text(raw_html))
     if not m:
         raise RuntimeError("No se encontró 'Fecha de actualización'.")
