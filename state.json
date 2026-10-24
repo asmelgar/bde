@@ -1,5 +1,4 @@
 {
-  "fallo_desde": "2026-10-24T08:55+00:00",
   "fecha": "07/10/2026",
   "pdfs": [
     "https://www.bde.es/f/webbde/PER/convoca/ficherosgenerales/GUIA_RAPIDA.pdf",
@@ -38,6 +37,5 @@
     "https://www.bde.es/f/webbe/PER/convoca/ficheros/2026A11_Subsanacion_meritos.pdf",
     "https://www.bde.es/f/webbe/PER/convoca/ficherosgenerales/MANUAL_DE_USO.pdf",
     "https://www.bde.es/f/webbe/PER/convoca/ficherosgenerales/descargar/TINTERNET.pdf"
-  ],
-  "ultimo_aviso_fallo": "2026-10-24T08:55+00:00"
+  ]
 }
